@@ -300,8 +300,8 @@ impl<T: Copy> Queue<T> {
             Err(PushError::Full(()))
         } else {
             let buffer: &mut [T] = unsafe {
-                #[allow(clippy::cast_ref_to_mut)]
-                &mut *(&self.buffer[..] as *const [Elem<T>] as *mut [T])
+                let ptr = self.buffer.as_ptr() as *mut T;
+                std::slice::from_raw_parts_mut(ptr, self.buffer.len())
             };
 
             if index + slice_length > buffer_length {
