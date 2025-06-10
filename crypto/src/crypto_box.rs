@@ -17,7 +17,6 @@ use std::convert::TryFrom;
 use std::fmt::{self, Debug};
 
 use hex::{FromHex, FromHexError};
-use sodiumoxide::crypto::box_;
 
 use crate::{blake2b::Blake2bError, hash::FromBytesError, CryptoError};
 
@@ -59,24 +58,24 @@ fn ensure_crypto_key_bytes<B: AsRef<[u8]>>(buf: B) -> Result<[u8; CRYPTO_KEY_SIZ
 
 /// Convenience wrapper around [`sodiumoxide::crypto::box_::PublicKey`]
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
-pub struct PublicKey(box_::PublicKey);
+pub struct PublicKey(Vec<u8>);
 
 impl PublicKey {
     /// Generates public key hash for public key
     pub fn public_key_hash(&self) -> Result<CryptoboxPublicKeyHash, PublicKeyError> {
-        CryptoboxPublicKeyHash::try_from(crate::blake2b::digest_128(self.0.as_ref())?)
-            .map_err(PublicKeyError::from)
+        todo!()
     }
 }
 
 impl CryptoKey for PublicKey {
     fn from_bytes<B: AsRef<[u8]>>(buf: B) -> Result<Self, CryptoError> {
-        ensure_crypto_key_bytes(buf).map(|key_bytes| PublicKey(box_::PublicKey(key_bytes)))
+        todo!()
+        // ensure_crypto_key_bytes(buf).map(|key_bytes| PublicKey(box_::PublicKey(key_bytes)))
     }
 }
 
-impl AsRef<box_::PublicKey> for PublicKey {
-    fn as_ref(&self) -> &box_::PublicKey {
+impl AsRef<[u8]> for PublicKey {
+    fn as_ref(&self) -> &[u8] {
         &self.0
     }
 }
@@ -91,16 +90,16 @@ impl FromHex for PublicKey {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, PartialEq)]
 /// Convenience wrapper around [`sodiumoxide::crypto::box_::SecretKey`]
-pub struct SecretKey(box_::SecretKey);
+pub struct SecretKey(Vec<u8>);
 
 impl CryptoKey for SecretKey {
     fn from_bytes<B: AsRef<[u8]>>(buf: B) -> Result<Self, CryptoError> {
-        ensure_crypto_key_bytes(buf).map(|key_bytes| SecretKey(box_::SecretKey(key_bytes)))
+        todo!()
     }
 }
 
-impl AsRef<box_::SecretKey> for SecretKey {
-    fn as_ref(&self) -> &box_::SecretKey {
+impl AsRef<[u8]> for SecretKey {
+    fn as_ref(&self) -> &[u8] {
         &self.0
     }
 }
@@ -117,23 +116,24 @@ impl FromHex for SecretKey {
 ///
 /// Note: Strange why it is called pair, bud returns triplet :)
 pub fn random_keypair() -> Result<(SecretKey, PublicKey, CryptoboxPublicKeyHash), PublicKeyError> {
-    // generate
-    let (pk, sk) = box_::gen_keypair();
+    // // generate
+    // let (pk, sk) = box_::gen_keypair();
 
-    // wrap it
-    let sk = SecretKey(sk);
-    let pk = PublicKey(pk);
+    // // wrap it
+    // let sk = SecretKey(sk);
+    // let pk = PublicKey(pk);
 
-    // generate public key hash
-    let pkh = pk.public_key_hash()?;
+    // // generate public key hash
+    // let pkh = pk.public_key_hash()?;
 
-    // return
-    Ok((sk, pk, pkh))
+    // // return
+    // Ok((sk, pk, pkh))
+    todo!()
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone)]
 /// Convenience wrapper around [`sodiumoxide::crypto::box_::PrecomputedKey`]
-pub struct PrecomputedKey(box_::PrecomputedKey);
+pub struct PrecomputedKey(Vec<u8>);
 
 #[cfg(feature = "fuzzing")]
 impl fuzzcheck::DefaultMutator for PrecomputedKey {
@@ -152,11 +152,11 @@ impl PrecomputedKey {
     /// * `pk_as_hex_string` - Hex string representing public key
     /// * `sk_as_hex_string` - Hex string representing secret key
     pub fn precompute(pk: &PublicKey, sk: &SecretKey) -> Self {
-        Self(box_::precompute(pk.as_ref(), sk.as_ref()))
+        todo!()
     }
 
-    pub fn from_bytes(bytes: [u8; box_::PRECOMPUTEDKEYBYTES]) -> Self {
-        Self(box_::PrecomputedKey(bytes))
+    pub fn from_bytes(bytes: [u8; 42]) -> Self {
+        todo!()
     }
 
     /// Encrypt binary message
@@ -166,8 +166,7 @@ impl PrecomputedKey {
     /// * `nonce` - Nonce required to encode message
     /// * `pck` - Precomputed key required to encode message
     pub fn encrypt(&self, msg: &[u8], nonce: &Nonce) -> Result<Vec<u8>, CryptoError> {
-        let box_nonce = box_::Nonce(nonce.get_bytes()?);
-        Ok(box_::seal_precomputed(msg, &box_nonce, &self.0))
+        todo!()
     }
 
     /// Decrypt binary message into raw binary data
@@ -177,11 +176,7 @@ impl PrecomputedKey {
     /// * `nonce` - Nonce required to decode message
     /// * `pck` - Precomputed key required to decode message
     pub fn decrypt(&self, enc: &[u8], nonce: &Nonce) -> Result<Vec<u8>, CryptoError> {
-        let box_nonce = box_::Nonce(nonce.get_bytes()?);
-        match box_::open_precomputed(enc, &box_nonce, &self.0) {
-            Ok(msg) => Ok(msg),
-            Err(()) => Err(CryptoError::FailedToDecrypt),
-        }
+        todo!()
     }
 }
 

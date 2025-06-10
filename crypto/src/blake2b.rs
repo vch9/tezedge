@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 use serde::{Deserialize, Serialize};
-use sodiumoxide::crypto::generichash::State;
+use cryptoxide::blake2b::Blake2b;
+use cryptoxide::digest::Digest;
 use thiserror::Error;
 
 #[cfg_attr(feature = "fuzzing", derive(fuzzcheck::DefaultMutator))]
@@ -38,12 +39,18 @@ pub fn digest_128(data: &[u8]) -> Result<Vec<u8>, Blake2bError> {
 /// Arbitrary Blake2b digest generation from generic data.
 // Should be noted, that base Blake2b supports arbitrary digest length from 16 to 64 bytes
 pub fn digest(data: &[u8], out_len: usize) -> Result<Vec<u8>, Blake2bError> {
-    let mut hasher = State::new(out_len, None).map_err(|_| Blake2bError::InvalidLenght)?;
-    hasher.update(data)?;
+    if !(16..=64).contains(&out_len) {
+        return Err(Blake2bError::InvalidLenght);
+    }
 
-    let hash = hasher.finalize()?;
-    let mut result = Vec::with_capacity(out_len);
-    result.extend_from_slice(hash.as_ref());
+    let mut hasher = Blake2b::new(out_len);
+
+    hasher.input(data);
+
+    let mut result = vec![0; hasher.output_bytes()];
+
+    hasher.result(result.as_mut_slice());
+
     Ok(result)
 }
 
@@ -54,14 +61,20 @@ where
     T: IntoIterator<Item = I>,
     I: AsRef<[u8]>,
 {
-    let mut hasher = State::new(out_len, None).map_err(|_| Blake2bError::InvalidLenght)?;
-    for d in data.into_iter() {
-        hasher.update(d.as_ref())?;
+
+    if !(16..=64).contains(&out_len) {
+        return Err(Blake2bError::InvalidLenght);
     }
 
-    let hash = hasher.finalize()?;
-    let mut result = Vec::with_capacity(out_len);
-    result.extend_from_slice(hash.as_ref());
+    let mut hasher = Blake2b::new(out_len);
+    for d in data.into_iter() {
+        hasher.input(d.as_ref());
+    }
+
+    let mut result = vec![0; hasher.output_bytes()];
+
+    hasher.result(result.as_mut_slice());
+
     Ok(result)
 }
 

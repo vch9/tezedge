@@ -3,7 +3,6 @@ use std::convert::TryFrom;
 use hex::FromHex;
 use num_bigint::BigUint;
 use serde::{Deserialize, Serialize};
-use sodiumoxide::randombytes::randombytes;
 use thiserror::Error;
 
 use crate::{blake2b::Blake2bError, CryptoError};
@@ -62,10 +61,17 @@ impl FromHex for ProofOfWork {
 }
 
 impl ProofOfWork {
+    fn randombytes(len: usize) -> Vec<u8> {
+        use rand::Rng;
+        let mut rng = rand::thread_rng();
+        (0..len).map(|_| rng.gen::<u8>()).collect()
+    }
+
+
     pub fn generate(public_key: &PublicKey, target: f64) -> Self {
         let mut data = [0; CRYPTO_KEY_SIZE + POW_SIZE];
         data[..CRYPTO_KEY_SIZE].clone_from_slice(public_key.as_ref().as_ref());
-        data[CRYPTO_KEY_SIZE..].clone_from_slice(randombytes(POW_SIZE).as_ref());
+        data[CRYPTO_KEY_SIZE..].clone_from_slice(Self::randombytes(POW_SIZE).as_ref());
 
         let target_number = make_target(target);
         loop {
