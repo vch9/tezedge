@@ -633,12 +633,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cty"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b365fabc795046672053e29c954733ec3b05e4be654ab130fe8f1f94d7051f35"
-
-[[package]]
 name = "darling"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -671,6 +665,14 @@ dependencies = [
  "darling_core",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "db-checker"
+version = "3.1.1"
+dependencies = [
+ "clap 2.34.0",
+ "edgekv",
 ]
 
 [[package]]
@@ -949,21 +951,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fed34cd105917e91daa4da6b3728c47b068749d6a62c59811f06ed2ac71d9da7"
 
 [[package]]
-name = "futures"
-version = "0.3.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f73fe65f54d1e12b726f517d3e2135ca3125a437b6d998caf1962961f7172d9e"
-dependencies = [
- "futures-channel",
- "futures-core",
- "futures-executor",
- "futures-io",
- "futures-sink",
- "futures-task",
- "futures-util",
-]
-
-[[package]]
 name = "futures-channel"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -978,35 +965,6 @@ name = "futures-core"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c09fd04b7e4073ac7156a9539b57a484a8ea920f79c7c675d05d289ab6110d3"
-
-[[package]]
-name = "futures-executor"
-version = "0.3.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9420b90cfa29e327d0429f19be13e7ddb68fa1cccb09d65e5706b8c7a749b8a6"
-dependencies = [
- "futures-core",
- "futures-task",
- "futures-util",
- "num_cpus",
-]
-
-[[package]]
-name = "futures-io"
-version = "0.3.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc4045962a5a5e935ee2fdedaa4e08284547402885ab326734432bed5d12966b"
-
-[[package]]
-name = "futures-macro"
-version = "0.3.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33c1e13800337f4d4d7a316bf45a567dbcb6ffe087f16424852d97e97a91f512"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
 
 [[package]]
 name = "futures-sink"
@@ -1026,13 +984,9 @@ version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8b7abd5d659d9b90c8cba917f6ec750a74e2dc23902ef9cd4cc8c8b22e6036a"
 dependencies = [
- "futures-channel",
  "futures-core",
- "futures-io",
- "futures-macro",
  "futures-sink",
  "futures-task",
- "memchr",
  "pin-project-lite",
  "pin-utils",
  "slab",
@@ -2027,34 +1981,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67ac1d3f9a1d3616fd9a60c8d74296f22406a238b6a72f5cc1e6f314df4ffbf9"
 dependencies = [
  "memchr",
-]
-
-[[package]]
-name = "ocaml-boxroot-sys"
-version = "0.2.0"
-source = "git+https://gitlab.com/bruno.deferrari/ocaml-boxroot.git?branch=ocaml-410-headers#8dbeb8259fe55e0de12473353237b7bc2877acf2"
-dependencies = [
- "cc",
-]
-
-[[package]]
-name = "ocaml-interop"
-version = "0.8.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e01e08412a7e072a90a225d2ae49a2860aeea853ce673bc63891dbf86aed063"
-dependencies = [
- "ocaml-boxroot-sys",
- "ocaml-sys",
- "static_assertions",
-]
-
-[[package]]
-name = "ocaml-sys"
-version = "0.22.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73ec6ca7d41458442627435afb8f4671e83fd642e8a560171d671a1f679aa3cf"
-dependencies = [
- "cty",
 ]
 
 [[package]]
@@ -3110,7 +3036,6 @@ dependencies = [
  "leb128",
  "libc",
  "modular-bitfield",
- "ocaml-interop",
  "parking_lot 0.12.1",
  "rand 0.8.5",
  "serde",
@@ -3123,7 +3048,6 @@ dependencies = [
  "tezos-sys",
  "tezos_api",
  "tezos_context_api",
- "tezos_conv",
  "tezos_messages",
  "tezos_spsc",
  "tezos_timing",
@@ -3157,20 +3081,6 @@ dependencies = [
  "tezos_context_api",
  "tezos_protocol_ipc_client",
  "thiserror",
-]
-
-[[package]]
-name = "tezos_conv"
-version = "3.1.1"
-dependencies = [
- "crypto",
- "num-bigint 0.3.3",
- "ocaml-interop",
- "tezos-sys",
- "tezos_api",
- "tezos_context_api",
- "tezos_messages",
- "tezos_protocol_ipc_messages",
 ]
 
 [[package]]
@@ -3214,46 +3124,6 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
-]
-
-[[package]]
-name = "tezos_interop"
-version = "3.1.1"
-dependencies = [
- "anyhow",
- "assert-json-diff",
- "bencher",
- "bincode",
- "criterion",
- "crypto",
- "futures",
- "hex",
- "lazy_static",
- "ocaml-interop",
- "serde_json",
- "serial_test",
- "slog-async",
- "slog-term",
- "strum",
- "tezos-sys",
- "tezos_api",
- "tezos_context",
- "tezos_context_api",
- "tezos_conv",
- "tezos_interop",
- "tezos_messages",
- "tezos_protocol_ipc_messages",
- "thiserror",
-]
-
-[[package]]
-name = "tezos_lib_storage_ffi"
-version = "3.1.1"
-dependencies = [
- "ocaml-interop",
- "tempfile",
- "tezos_context",
- "tezos_interop",
 ]
 
 [[package]]
@@ -3336,7 +3206,6 @@ dependencies = [
  "rusqlite",
  "serde",
  "static_assertions",
- "tezos_conv",
  "tezos_spsc",
 ]
 
@@ -4001,3 +3870,8 @@ dependencies = [
  "cc",
  "libc",
 ]
+
+[[patch.unused]]
+name = "ocaml-boxroot-sys"
+version = "0.2.0"
+source = "git+https://gitlab.com/bruno.deferrari/ocaml-boxroot.git?branch=ocaml-410-headers#8dbeb8259fe55e0de12473353237b7bc2877acf2"

@@ -135,10 +135,7 @@ pub mod hash;
 pub mod serialize;
 pub mod working_tree;
 
-pub mod ffi;
-pub mod from_ocaml;
 pub mod initializer;
-pub mod timings;
 
 pub mod snapshot;
 

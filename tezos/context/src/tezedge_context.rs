@@ -7,7 +7,6 @@ use std::rc::Rc;
 use std::{cell::RefCell, convert::TryInto, sync::Arc};
 
 use crypto::hash::ContextHash;
-use ocaml_interop::BoxRoot;
 use parking_lot::RwLock;
 use tezos_context_api::StringDirectoryMap;
 use tezos_timing::{BlockMemoryUsage, ContextMemoryUsage};
@@ -17,7 +16,6 @@ use crate::{
     hash::ObjectHash,
     kv_store::HashId,
     persistent::{get_commit_hash, DBError},
-    timings::send_statistics,
     working_tree::{
         storage::{BlobId, DirEntryId, DirectoryId, Storage},
         string_interner::StringInterner,
@@ -88,7 +86,7 @@ pub struct TezedgeIndex {
     /// The `repository` contains objects from previous applied blocks, while `Self::storage`
     /// contains objects from the block being currently processed.
     pub repository: Arc<RwLock<ContextKeyValueStore>>,
-    pub patch_context: Rc<Option<BoxRoot<PatchContextFunction>>>,
+    pub patch_context: Rc<Option<PatchContextFunction>>,
     /// `storage` contains all the objects from the `WorkingTree`.
     /// This is where all directories/blobs/strings are allocated.
     /// The `WorkingTree` only has access to ids which refer to data inside `storage`.
@@ -109,7 +107,7 @@ use std::cell::RefMut;
 impl TezedgeIndex {
     pub fn new(
         repository: Arc<RwLock<ContextKeyValueStore>>,
-        patch_context: Option<BoxRoot<PatchContextFunction>>,
+        patch_context: Option<PatchContextFunction>,
     ) -> Self {
         let patch_context = Rc::new(patch_context);
         Self {
@@ -1133,10 +1131,10 @@ impl TezedgeContext {
 
         let mem = self.get_memory_usage()?;
 
-        send_statistics(BlockMemoryUsage {
-            context: Box::new(mem),
-            serialize: serialize_stats,
-        });
+        // send_statistics(BlockMemoryUsage {
+        //     context: Box::new(mem),
+        //     serialize: serialize_stats,
+        // });
 
         Ok(commit_hash)
     }
