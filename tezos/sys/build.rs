@@ -358,39 +358,39 @@ fn run_builder(build_chain: &BuildChain) {
 
 fn main() {
     // ensure lib_tezos/artifacts directory is empty
-    if Path::new(ARTIFACTS_DIR).exists() {
-        fs::remove_dir_all(ARTIFACTS_DIR).expect("Failed to delete artifacts directory!");
-    }
-    fs::create_dir_all(ARTIFACTS_DIR).expect("Failed to create artifacts directory!");
+    // if Path::new(ARTIFACTS_DIR).exists() {
+    //     fs::remove_dir_all(ARTIFACTS_DIR).expect("Failed to delete artifacts directory!");
+    // }
+    // fs::create_dir_all(ARTIFACTS_DIR).expect("Failed to create artifacts directory!");
 
-    let tezos_base_dir = env::var("TEZOS_BASE_DIR").unwrap_or_else(|_| "".to_owned());
-    let build_chain = if tezos_base_dir.is_empty() {
-        BuildChain::Remote
-    } else {
-        BuildChain::Local(tezos_base_dir)
-    };
-    run_builder(&build_chain);
+    // let tezos_base_dir = env::var("TEZOS_BASE_DIR").unwrap_or_else(|_| "".to_owned());
+    // let build_chain = if tezos_base_dir.is_empty() {
+    //     BuildChain::Remote
+    // } else {
+    //     BuildChain::Local(tezos_base_dir)
+    // };
+    // run_builder(&build_chain);
 
-    // copy artifact files to OUT_DIR location
-    let out_dir = env::var("OUT_DIR").unwrap();
+    // // copy artifact files to OUT_DIR location
+    // let out_dir = env::var("OUT_DIR").unwrap();
 
-    let artifacts_dir_items = fs::read_dir(ARTIFACTS_DIR)
-        .unwrap()
-        .filter_map(Result::ok)
-        .map(|dir_entry| dir_entry.path())
-        .filter(|path| path.is_file())
-        .collect::<Vec<PathBuf>>();
-    let artifacts_dir_items: Vec<&Path> = artifacts_dir_items.iter().map(|p| p.as_path()).collect();
-    let mut copy_options = fs_extra::dir::CopyOptions::new();
-    copy_options.overwrite = true;
-    let bytes_copied = fs_extra::copy_items(&artifacts_dir_items, &out_dir, &copy_options)
-        .expect("Failed to copy artifacts to build output directory.");
-    if bytes_copied == 0 {
-        println!("cargo:warning=No files were found in the artifacts directory.");
-        panic!("Failed to build tezos_interop artifacts.");
-    }
+    // let artifacts_dir_items = fs::read_dir(ARTIFACTS_DIR)
+    //     .unwrap()
+    //     .filter_map(Result::ok)
+    //     .map(|dir_entry| dir_entry.path())
+    //     .filter(|path| path.is_file())
+    //     .collect::<Vec<PathBuf>>();
+    // let artifacts_dir_items: Vec<&Path> = artifacts_dir_items.iter().map(|p| p.as_path()).collect();
+    // let mut copy_options = fs_extra::dir::CopyOptions::new();
+    // copy_options.overwrite = true;
+    // let bytes_copied = fs_extra::copy_items(&artifacts_dir_items, &out_dir, &copy_options)
+    //     .expect("Failed to copy artifacts to build output directory.");
+    // if bytes_copied == 0 {
+    //     println!("cargo:warning=No files were found in the artifacts directory.");
+    //     panic!("Failed to build tezos_interop artifacts.");
+    // }
 
-    println!("cargo:rustc-link-search={}", &out_dir);
-    println!("cargo:rustc-link-lib=dylib=tezos");
-    println!("cargo:rerun-if-env-changed=TEZOS_BASE_DIR");
+    // println!("cargo:rustc-link-search={}", &out_dir);
+    // println!("cargo:rustc-link-lib=dylib=tezos");
+    // println!("cargo:rerun-if-env-changed=TEZOS_BASE_DIR");
 }
