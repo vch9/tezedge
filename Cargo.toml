@@ -21,7 +21,6 @@ members = [
     "tezos/spsc",
     "tezos/timing",
     "storage",
-    "sandbox",
     "edgekv",
     "edgekv/db-checker",
 ]
