@@ -139,9 +139,9 @@ pub mod initializer;
 
 pub mod snapshot;
 
-pub fn force_libtezos_linking() {
-    tezos_sys::force_libtezos_linking();
-}
+// pub fn force_libtezos_linking() {
+//     tezos_sys::force_libtezos_linking();
+// }
 
 use std::array::TryFromSliceError;
 use std::num::TryFromIntError;
