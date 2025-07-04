@@ -2,7 +2,7 @@
 name = "tezos_context_api"
 version = "3.1.1"
 edition = "2021"
-rust-version = "1.58"
+rust-version = "1.86"
 authors = ["Bruno Deferrari <bruno.deferrari@viablesystems.io>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
