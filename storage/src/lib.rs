@@ -917,7 +917,7 @@ pub mod tests_common {
             let cfg = DbConfiguration::default();
 
             // create common RocksDB block cache to be shared among column families
-            let db_cache = Cache::new_lru_cache(128 * 1024 * 1024)?; // 128 MB
+            let db_cache = Cache::new_lru_cache(128 * 1024 * 1024); // 128 MB
             let backend = if cfg!(feature = "maindb-backend-rocksdb") {
                 let kv = Arc::new(open_kv(
                     path.join("db"),

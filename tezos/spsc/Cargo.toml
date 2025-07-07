@@ -3,7 +3,7 @@ name = "tezos_spsc"
 version = "3.1.1"
 authors = ["Sebastien Chapuis <sebastien@chapu.is>"]
 edition = "2021"
-rust-version = "1.58"
+rust-version = "1.86"
 
 [target.'cfg(loom)'.dependencies]
 loom = "0.5"

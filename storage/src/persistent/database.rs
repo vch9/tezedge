@@ -363,9 +363,10 @@ impl<'a, S: KeyValueSchema> Iterator for IteratorWithSchema<'a, S> {
 
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
-        self.0
-            .next()
-            .map(|(k, v)| (S::Key::decode(&k), S::Value::decode(&v)))
+        self.0.next().and_then(|res| match res {
+            Ok((k, v)) => Some((S::Key::decode(&k), S::Value::decode(&v))),
+            Err(_) => None,
+        })
     }
 }
 

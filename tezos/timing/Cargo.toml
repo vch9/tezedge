@@ -3,7 +3,7 @@ name = "tezos_timing"
 version = "3.1.1"
 authors = ["Sebastien Chapuis <sebastien@chapu.is>"]
 edition = "2021"
-rust-version = "1.58"
+rust-version = "1.86"
 
 [dependencies]
 crypto = { path = "../../crypto" }

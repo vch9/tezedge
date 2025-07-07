@@ -3,7 +3,7 @@ name = "storage"
 version = "3.1.1"
 authors = ["Tomas Sedlak <tomas.sedlak@simplestaking.com>"]
 edition = "2021"
-rust-version = "1.58"
+rust-version = "1.86"
 
 [dependencies]
 anyhow = "1.0"
@@ -16,14 +16,14 @@ hex = "0.4"
 itertools = "0.10"
 num = { version = "0.4", features = ["serde"] }
 num_cpus = "1.13"
-rocksdb = {version = "0.18", features = ["snappy", "lz4", "zstd", "zlib"], default-features = false }
+rocksdb = { git = "https://github.com/rust-rocksdb/rust-rocksdb", features = ["snappy", "lz4", "zstd", "zlib"], default-features = false }
 serde = { version = "1.0", features = ["derive", "rc"] }
 serde_json = "1.0"
 slog = { version = "2.7", features = ["max_level_trace", "release_max_level_trace"] }
 sled = "0.34.6"
 strum = "0.20"
 strum_macros = "0.20"
-zstd = "0.10.0"
+zstd = "0.13.0"
 edgekv = { path = "../edgekv" }
 fuzzcheck = { git = "https://github.com/tezedge/fuzzcheck-rs.git", optional = true }
 
