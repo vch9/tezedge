@@ -193,3 +193,53 @@ pub fn recompute_hashes(
 
     Ok(())
 }
+
+pub fn export_snapshot(context_path: String, context_hash: &ContextHash, output: String) {
+    let start = std::time::Instant::now();
+
+    log!(
+        "Start creating snapshot at {:?}, using {:?}",
+        output,
+        context_hash,
+    );
+
+    let ctx = reload_context_readonly(context_path).unwrap();
+
+    let now = std::time::Instant::now();
+    log!("Loading context in memory...");
+    let (tree, storage, string_interner, parent_hash, commit) =
+        read_commit_tree(ctx, context_hash).unwrap();
+    log!("Loading context in memory ok {:?}", now.elapsed());
+
+    let now = std::time::Instant::now();
+    log!("Creating snapshot from context in memory...");
+    create_new_database(
+        tree,
+        storage,
+        string_interner,
+        parent_hash,
+        commit,
+        &output,
+        context_hash,
+        log_snapshot,
+    )
+    .unwrap();
+    log!(
+        "Creating snapshot from context in memory ok {:?}",
+        now.elapsed()
+    );
+
+    let now = std::time::Instant::now();
+    log!("Loading snapshot & re-compute hashes...");
+    recompute_hashes(&output, context_hash, log_snapshot).unwrap();
+    log!(
+        "Loading snapshot & re-compute hashes ok {:?}",
+        now.elapsed()
+    );
+
+    log!("Snapshot {:?} created in {:?}", output, start.elapsed(),);
+}
+
+fn log_snapshot(s: &str) {
+    log!("{}", s)
+}
