@@ -2859,6 +2859,7 @@ name = "tezos_context"
 version = "3.1.1"
 dependencies = [
  "anyhow",
+ "async_ipc",
  "bincode",
  "blake2",
  "crc32fast",

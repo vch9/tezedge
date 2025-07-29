@@ -118,17 +118,25 @@ fn spawn_reload_database(
     result
 }
 
+pub fn socket_path() -> String {
+    async_ipc::temp_sock().to_string_lossy().as_ref().to_owned()
+}
+
 pub fn initialize_tezedge_index(
     configuration: &TezosContextTezEdgeStorageConfiguration,
     patch_context: Option<PatchContextFunction>,
 ) -> Result<TezedgeIndex, IndexInitializationError> {
     let repository: Arc<RwLock<ContextKeyValueStore>> = match configuration.backend {
-        ContextKvStoreConfiguration::ReadOnlyIpc => match configuration.ipc_socket_path.clone() {
-            None => return Err(IndexInitializationError::IpcSocketPathMissing),
-            Some(ipc_socket_path) => Arc::new(RwLock::new(ReadonlyIpcBackend::try_connect(
+        ContextKvStoreConfiguration::ReadOnlyIpc => {
+            let ipc_socket_path = match &configuration.ipc_socket_path {
+                None => panic!("Missing ipc_socket_path"),
+                Some(ipc_socket_path) => ipc_socket_path.clone(),
+            };
+            println!("ipc_socket_path: {ipc_socket_path}");
+            Arc::new(RwLock::new(ReadonlyIpcBackend::try_connect(
                 ipc_socket_path,
-            )?)),
-        },
+            )?))
+        }
         ContextKvStoreConfiguration::InMem(ref options) => {
             Arc::new(RwLock::new(InMemory::try_new(InMemoryConfiguration {
                 db_path: Some(options.base_path.clone()),

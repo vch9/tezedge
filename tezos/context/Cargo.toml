@@ -34,6 +34,7 @@ tezos_context_api = { path = "../context-api" }
 tezos_spsc = { path = "../spsc" }
 crypto = { path = "../../crypto" }
 tezos_timing = { path = "../timing" }
+async_ipc = { version = "3.1.1", path = "../../async-ipc" }
 
 [dev-dependencies]
 flate2 = "1.0"
