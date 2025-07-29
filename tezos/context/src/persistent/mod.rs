@@ -23,7 +23,7 @@ use crate::{
     initializer::IndexInitializationError,
     kv_store::{
         in_memory::BATCH_CHUNK_CAPACITY, inline_boxed_slice::InlinedBoxedSlice,
-        HashId, HashIdError, VacantObjectHash,
+        readonly_ipc::ContextServiceError, HashId, HashIdError, VacantObjectHash,
     },
     serialize::DeserializationError,
     working_tree::{
@@ -260,6 +260,8 @@ pub enum DBError {
     },
     #[error("MemoryStatisticsOverflow")]
     MemoryStatisticsOverflow,
+    #[error("IPC Context access error: {reason:?}")]
+    IpcAccessError { reason: ContextServiceError },
     #[error("Missing object: {object_ref:?}")]
     MissingObject { object_ref: ObjectReference },
     #[error("Conversion from/to HashId failed")]

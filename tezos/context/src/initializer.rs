@@ -13,6 +13,7 @@ use thiserror::Error;
 
 use crate::kv_store::in_memory::{InMemory, InMemoryConfiguration};
 use crate::kv_store::persistent::{Persistent, PersistentConfiguration};
+use crate::kv_store::readonly_ipc::ReadonlyIpcBackend;
 use crate::persistent::file::OpenFileError;
 use crate::persistent::lock::LockDatabaseError;
 use crate::serialize::DeserializationError;
@@ -122,7 +123,12 @@ pub fn initialize_tezedge_index(
     patch_context: Option<PatchContextFunction>,
 ) -> Result<TezedgeIndex, IndexInitializationError> {
     let repository: Arc<RwLock<ContextKeyValueStore>> = match configuration.backend {
-        ContextKvStoreConfiguration::ReadOnlyIpc => todo!(),
+        ContextKvStoreConfiguration::ReadOnlyIpc => match configuration.ipc_socket_path.clone() {
+            None => return Err(IndexInitializationError::IpcSocketPathMissing),
+            Some(ipc_socket_path) => Arc::new(RwLock::new(ReadonlyIpcBackend::try_connect(
+                ipc_socket_path,
+            )?)),
+        },
         ContextKvStoreConfiguration::InMem(ref options) => {
             Arc::new(RwLock::new(InMemory::try_new(InMemoryConfiguration {
                 db_path: Some(options.base_path.clone()),

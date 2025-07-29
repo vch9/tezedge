@@ -23,6 +23,7 @@ pub mod in_memory;
 pub mod index_map;
 pub mod inline_boxed_slice;
 pub mod persistent;
+pub mod readonly_ipc;
 
 pub const INMEM: &str = "inmem";
 
